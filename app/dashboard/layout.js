@@ -1,3 +1,5 @@
+import Navbar from "@components/Navbar";
+
 export const metadata = {
   title: "dashboard",
 };
@@ -5,7 +7,7 @@ function DashboardLayout({ children }) {
   return (
     <html>
       <body>
-        <h1>This is layout</h1>
+        <Navbar/>
         {children}
       </body>
     </html>

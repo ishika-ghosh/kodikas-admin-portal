@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import Team from "@models/team";
-export async function GET() {
+import { getDetails } from "@controllers/getDetails";
+export async function GET(request) {
   try {
     await connectToDatabase();
     const teams = await Team.find();

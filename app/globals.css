@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
 
+}
+
+.-translate-x-full.open {
+  --tw-translate-x: 0%
 }
