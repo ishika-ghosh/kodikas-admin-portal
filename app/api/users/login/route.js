@@ -36,6 +36,7 @@ export async function POST(request) {
       success: true,
     });
     response.cookies.set("token", token);
+    
     return response;
   } catch (error) {
     console.log(error);

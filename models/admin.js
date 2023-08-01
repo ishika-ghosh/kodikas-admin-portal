@@ -14,7 +14,7 @@ const adminSchema = new Schema(
     },
     isSuperAdmin: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   { timestamps: true }

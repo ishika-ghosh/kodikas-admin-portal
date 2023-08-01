@@ -2,12 +2,26 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import Admin from "@models/admin";
 import bcryptjs from "bcryptjs";
+import { getDetails } from "@controllers/getDetails";
 
 export async function POST(req) {
   try {
     await connectToDatabase();
     const reqBody = await req.json();
-    const { username, password } = reqBody;
+    const { username, password ,isSuperAdmin} = reqBody;
+    const decoded=getDetails(req);
+    if(!decoded){
+      return NextResponse.redirect('/login').json({
+        message:"token expired"
+      });
+    }
+    const admin=await Admin.findById(decoded?.id);
+    if(!admin.isSuperAdmin){
+      return NextResponse.json({
+        error:"Non super admin can not create a user"
+
+      },{status:400})
+    }
     console.log(reqBody);
     const existingUser = await Admin.findOne({ username });
     if (existingUser) {
@@ -21,7 +35,7 @@ export async function POST(req) {
     const newAdmin = new Admin({
       username,
       password: hashedPassword,
-      isSuperAdmin: true,
+      isSuperAdmin,
     });
     const savedAdmin = await newAdmin.save();
     return NextResponse.json({ status: 200, savedAdmin });
