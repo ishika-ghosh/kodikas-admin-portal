@@ -7,8 +7,8 @@ function DashboardLayout({ children }) {
   return (
     <html>
       <body>
-        <Navbar/>
-        {children}
+        <Navbar />
+        <div className="w-4/5 fixed top-0 left-1/4 ">{children}</div>
       </body>
     </html>
   );

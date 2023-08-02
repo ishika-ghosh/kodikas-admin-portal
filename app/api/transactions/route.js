@@ -1,4 +1,7 @@
 import Payment from "@models/payment";
+import Team from "@models/team";
+import User from "@models/user";
+import Admin from "@models/admin";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 export async function GET(req) {
