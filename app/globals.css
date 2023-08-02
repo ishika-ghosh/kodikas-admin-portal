@@ -13,3 +13,8 @@
   margin-top: 50px;
   --tw-translate-x: 0%
 }
+@media only screen and (max-width: 600px){
+  .margin-responsive {
+      margin-left: 0px;
+    }
+}
