@@ -94,7 +94,7 @@ function Users() {
           </div>
           <div className="sm:flex">
             <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
-              <form className="lg:pr-3" action="#" method="GET">
+              <div className="lg:pr-3">
                 <label for="users-search" className="sr-only">
                   Search
                 </label>
@@ -107,7 +107,7 @@ function Users() {
                     placeholder="Search for users"
                   />
                 </div>
-              </form>
+              </div>
             </div>
             <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
               <Link
