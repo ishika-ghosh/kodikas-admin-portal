@@ -8,19 +8,19 @@ export async function POST(req) {
   try {
     await connectToDatabase();
     const reqBody = await req.json();
-    const { username, password ,isSuperAdmin} = reqBody;
-    const decoded=getDetails(req);
-    if(!decoded){
-      return NextResponse.redirect('/login').json({
-        message:"token expired"
-      });
+    const { username, password, isSuperAdmin } = reqBody;
+    const decoded = getDetails(req);
+    if (!decoded) {
+      return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const admin=await Admin.findById(decoded?.id);
-    if(!admin.isSuperAdmin){
-      return NextResponse.json({
-        error:"Non super admin can not create a user"
-
-      },{status:400})
+    const admin = await Admin.findById(decoded?.id);
+    if (!admin.isSuperAdmin) {
+      return NextResponse.json(
+        {
+          error: "Non super admin can not create a user",
+        },
+        { status: 400 }
+      );
     }
     console.log(reqBody);
     const existingUser = await Admin.findOne({ username });

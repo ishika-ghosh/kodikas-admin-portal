@@ -4,6 +4,7 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
+import { getDetails } from "@controllers/getDetails";
 export async function GET(req) {
   try {
     await connectToDatabase();
@@ -42,7 +43,7 @@ export async function GET(req) {
 export async function PUT(req) {
   try {
     await connectToDatabase();
-    const { teamId, paymentStatus, adminId } = await req.json();
+    const { teamId, paymentStatus } = await req.json();
     const teamDetails = await Team.findOne({ _id: teamId });
     if (!teamDetails.teamMemberConfirmation) {
       return NextResponse.json({
@@ -53,9 +54,14 @@ export async function PUT(req) {
     const updatedData = await Team.findByIdAndUpdate(teamId, {
       payment: paymentStatus,
     });
+    const admin = getDetails(req);
+    if (!admin) {
+      return NextResponse.json({ error: "Not valid user", success: false });
+    }
+
     const addInPayment = await Payment.create({
       team: teamId,
-      admin: adminId,
+      admin: admin?.id,
     });
     return NextResponse.json({
       success: true,
