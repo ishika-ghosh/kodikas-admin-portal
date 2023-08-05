@@ -13,6 +13,11 @@
   margin-top: 50px;
   --tw-translate-x: 0%
 }
+.modal-position{
+  margin-left: 30%;  
+  margin-top: 10%;
+
+}
 @media only screen and (max-width: 600px){
   .margin-responsive {
       margin-left: 0px;

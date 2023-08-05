@@ -5,12 +5,10 @@ export const metadata = {
 };
 function DashboardLayout({ children }) {
   return (
-    <html>
-      <body>
-        <Navbar />
-        <div className="ml-80 margin-responsive">{children}</div>
-      </body>
-    </html>
+    <body>
+      <Navbar />
+      <div className="ml-80 margin-responsive">{children}</div>
+    </body>
   );
 }
 
