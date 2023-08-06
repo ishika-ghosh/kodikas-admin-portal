@@ -1,14 +1,10 @@
 import { Schema, model, models } from "mongoose";
 
-const EventsSchema = new Schema(
+const EventsDaySchema = new Schema(
   {
     team: {
       type: Schema.Types.ObjectId,
       ref: "Team",
-    },
-    payment: {
-      type: Boolean,
-      default: false,
     },
     attendance: {
       type: Boolean,
@@ -38,5 +34,6 @@ const EventsSchema = new Schema(
   { timestamps: true }
 );
 
-const Event = (models && models.Event) || model("Event", EventsSchema);
-export default Event;
+const EventDay =
+  (models && models.EventDay) || model("EventDay", EventsDaySchema);
+export default EventDay;

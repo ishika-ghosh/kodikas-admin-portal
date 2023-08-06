@@ -7,7 +7,9 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     await connectToDatabase();
-    let transactions = await Payment.find({}).populate(["team", "admin"]);
+    let transactions = await Payment.find({})
+      .populate({ path: "team", populate: ["leader"] })
+      .populate("admin");
     return NextResponse.json({
       success: true,
       message: "Transaction Details",
