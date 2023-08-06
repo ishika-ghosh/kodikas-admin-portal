@@ -95,7 +95,7 @@ function Users() {
           <div className="sm:flex">
             <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
               <div className="lg:pr-3">
-                <label for="users-search" className="sr-only">
+                <label htmlFor="users-search" className="sr-only">
                   Search
                 </label>
                 <div className="relative mt-1 lg:w-64 xl:w-96">
