@@ -1,13 +1,17 @@
 "use client";
 import TeamDetails from "@components/TeamDetails";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 function Scanner() {
   const [paymentStatus, setPaymentStatus] = useState(false);
+  const [entryStatus, setEntryStatus] = useState(false);
+  const [lunchStatus, setLunchStatus] = useState(false);
   const [detailsConfirmed, setDetailsConfirmed] = useState(false);
   const [teamId, setTeamId] = useState(null);
   const [qrData, setQrData] = useState(null);
+  const [timings, setTimings] = useState(null);
   useEffect(() => {
     const scanner = new Html5QrcodeScanner("reader", {
       qrbox: {
@@ -22,10 +26,16 @@ function Scanner() {
     async function onScanSuccess(qrCodeMessage) {
       scanner.clear();
       setTeamId(qrCodeMessage);
-      const response = await fetch(`/api/payment?teamid=${qrCodeMessage}`);
+      const response = await fetch(`/api/events/teamDetail?teamid=${qrCodeMessage}`);
+      const timingsResponse = await fetch(`/api/event-times`);
+      const timingsResponseData = await timingsResponse.json();
       const data = await response.json();
-      setQrData(data.team);
-      setPaymentStatus(data.team.payment);
+      setTimings(timingsResponseData);
+      setQrData(data);
+      console.log(data);
+      setPaymentStatus(data.payment);
+      setEntryStatus(data.attendance);
+      setLunchStatus(data.lunch);
     }
 
     function onScanError(err) {
@@ -33,13 +43,25 @@ function Scanner() {
     }
   }, []);
 
+  const checkTime = (timingOf) => {
+    for (let i = 0; i < timings.length; i++) {
+      if (timings[i].name === timingOf) {
+        const now = new Date();
+        const startTime = new Date(timings[i].startTime);
+        const endTime = new Date(timings[i].endTime);
+        return now > startTime && now < endTime;
+      }
+    }
+    return false;
+  }
+
   const submitHandler = async () => {
-    await fetch("/api/payment", {
+    await fetch("/api/events/teamDetail/changeDetails/byAdmin", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ teamId, paymentStatus }),
+      body: JSON.stringify({ teamId, paymentStatus, entryStatus, lunchStatus }),
     });
   };
 
@@ -49,106 +71,66 @@ function Scanner() {
         {detailsConfirmed ? (
           <>
             <div className="h-screen  -ml-32 flex justify-center flex-col gap-6">
-              {/* Past Event */}
-              {/* <div className="flex items-center">
-                  <input disabled checked type="checkbox" value="" className="w-8 h-8 accent-green-600  rounded  " />
-                  <label className="ml-8 font-extrabold text-3xl text-green-600 ">Payment</label>
-                </div> */}
-              {/* Ongoing Event */}
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
-                  defaultChecked={paymentStatus}
-                  className="w-8 h-8 accent-red-600 rounded"
+                  disabled={qrData.payment}
+                  defaultChecked={qrData.payment}
+                  className="w-8 h-8 accent-purple-600 rounded"
                   onChange={() => setPaymentStatus((prev) => !prev)}
                 />
-                <label className="ml-8 font-extrabold text-3xl text-red-600">
-                  Payment
-                </label>
-              </div>
-              {/* Future Event */}
-              <div className="flex items-center mb-4">
-                <input
-                  disabled
-                  id="disabled-checkbox"
-                  type="checkbox"
-                  value=""
-                  className="w-8 h-8 accent-purple-600  rounded  "
-                />
-                <label className="ml-8 font-extrabold text-3xl text-purple-400 ">
-                  Attendance
+                <label className="ml-8 font-extrabold text-3xl text-purple-600">
+                  {qrData.payment ? <s className="text-gray-600">Payment</s> : "Payment"}
                 </label>
               </div>
               <div className="flex items-center mb-4">
                 <input
-                  disabled
-                  id="disabled-checkbox"
                   type="checkbox"
-                  value=""
-                  className="w-8 h-8 accent-teal-600  rounded  "
+                  disabled={qrData.attendance || !checkTime("Attendance")}
+                  defaultChecked={qrData.attendance}
+                  className="w-8 h-8 accent-purple-600 rounded"
+                  onChange={() => setEntryStatus((prev) => !prev)}
                 />
-                <label className="ml-8 font-extrabold text-3xl text-teal-400 ">
-                  1st Round
+                <label className="ml-8 font-extrabold text-3xl text-purple-600">
+                  {qrData.attendance ? <s className="text-gray-600">Entry</s> : !checkTime("Attendance") ? <p className="text-gray-600">Entry</p> : "Entry"}
                 </label>
               </div>
               <div className="flex items-center mb-4">
                 <input
-                  disabled
-                  id="disabled-checkbox"
                   type="checkbox"
-                  value=""
-                  className="w-8 h-8 accent-yellow-600  rounded  "
+                  disabled={qrData.lunch || !checkTime("Lunch")}
+                  defaultChecked={qrData.lunch}
+                  className="w-8 h-8 accent-purple-600 rounded"
+                  onChange={() => setLunchStatus((prev) => !prev)}
                 />
-                <label className="ml-8 font-extrabold text-3xl text-yellow-400 ">
-                  2nd Round
+                <label className="ml-8 font-extrabold text-3xl text-purple-600">
+                  {qrData.lunch ? <s className="text-gray-600">Lunch</s> : !checkTime("Lunch") ? <p className="text-gray-600">Lunch</p> : "Lunch"}
                 </label>
               </div>
-              <div className="flex items-center mb-4">
-                <input
-                  disabled
-                  id="disabled-checkbox"
-                  type="checkbox"
-                  value=""
-                  className="w-8 h-8 accent-orange-600  rounded  "
-                />
-                <label className="ml-8 font-extrabold text-3xl text-orange-400 ">
-                  3rd Round
-                </label>
-              </div>
-              <div className="flex items-center mb-6">
-                <input
-                  disabled
-                  id="disabled-checkbox"
-                  type="checkbox"
-                  value=""
-                  className="w-8 h-8 accent-black-600  rounded  "
-                />
-                <label className="ml-8 font-extrabold text-3xl text-black-400 ">
-                  4th Round
-                </label>
-              </div>
-              <button
-                type="button"
-                className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                onClick={submitHandler}
-              >
-                Verified and Submit
-                <svg
-                  className="w-3.5 h-3.5 ml-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
+              <Link href={"/dashboard/transactions"}>
+                <button
+                  type="button"
+                  className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                  onClick={submitHandler}
                 >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </button>
+                  Verified and Submit
+                  <svg
+                    className="w-3.5 h-3.5 ml-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </button>
+              </Link>
             </div>
           </>
         ) : (
@@ -212,7 +194,7 @@ function Scanner() {
             )}
           </>
         )}
-      </div>
+      </div >
     </>
   );
 }
