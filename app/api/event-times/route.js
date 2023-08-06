@@ -20,10 +20,8 @@ export async function GET() {
 export async function POST(req) {
   try {
     await connectToDatabase();
-    const { name } = await req.json();
-    const event = new EventTimings({
-      name: name,
-    });
+    const body = await req.json();
+    const event = new EventTimings(body);
     const newEvent = await event.save();
     return NextResponse.json(newEvent);
   } catch (error) {
