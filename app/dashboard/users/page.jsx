@@ -2,10 +2,33 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Loader from "./../../../components/Loader";
+import Loader from "@components/Loader";
 
 function Users() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [yearSort, setYearSort] = useState(0);
+  const [deptSort, setDeptSort] = useState(0);
+  const [search, setSearch] = useState("");
+  useEffect(() => {
+    const handler = async () => {
+      try {
+        let sort;
+        if (!yearSort && !deptSort) sort = "";
+        if (yearSort) sort = yearSort > 0 ? "year" : "-year";
+        if (deptSort) sort = deptSort > 0 ? "department" : "-department";
+        console.log(sort);
+        const {
+          data: { data },
+        } = await axios.get(`/api/users?search=${search}&sort=${sort}`);
+        setUsers(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handler();
+  }, [yearSort, deptSort, search]);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -14,8 +37,8 @@ function Users() {
           data: { data },
         } = await axios.get("/api/users");
         console.log(data);
-        setUsers(data);
         setLoading(false);
+        setUsers(data);
       } catch (error) {
         console.log(error);
       }
