@@ -6,7 +6,6 @@ import Loader from "./../../../components/Loader";
 
 function Users() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -99,7 +98,7 @@ function Users() {
             </h1>
           </div>
           <div className="sm:flex">
-            <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
+            <div className="items-center mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
               <div className="lg:pr-3">
                 <label htmlFor="users-search" className="sr-only">
                   Search
@@ -111,6 +110,9 @@ function Users() {
                     id="users-search"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Search for users"
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
                   />
                 </div>
               </div>
@@ -169,13 +171,63 @@ function Users() {
                       scope="col"
                       className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
                     >
-                      department
+                      <div
+                        className="flex gap-1"
+                        onClick={() => {
+                          setDeptSort((prev) => {
+                            if (prev == 0 || prev == -1) return 1;
+                            return -1;
+                          });
+                          setYearSort(0);
+                        }}
+                      >
+                        <div>department</div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                          />
+                        </svg>
+                      </div>
                     </th>
                     <th
                       scope="col"
                       className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
                     >
-                      year
+                      <div
+                        className="flex gap-1"
+                        onClick={() => {
+                          setYearSort((prev) => {
+                            if (prev == 0 || prev == -1) return 1;
+                            return -1;
+                          });
+                          setDeptSort(0);
+                        }}
+                      >
+                        <div>year</div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                          />
+                        </svg>
+                      </div>
                     </th>
                     <th
                       scope="col"
@@ -186,7 +238,7 @@ function Users() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                  {users.map((user) => (
+                  {users?.map((user) => (
                     <tr
                       className="hover:bg-gray-100 dark:hover:bg-gray-700"
                       key={user._id}
