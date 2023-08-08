@@ -8,13 +8,15 @@ import EventDay from "@models/eventDay";
 export async function GET() {
   try {
     await connectToDatabase();
+    const today = new Date().toDateString();
+    const tomorrow = new Date().setDate(new Date().getDate() + 1);
     const teams = await Team.count({ payment: true });
     const users = await User.count({});
     const transactions = await Payment.count({});
     const todaysTransactions = await Payment.count({
       createdAt: {
-        $gt: new Date(new Date().getDate()),
-        $lt: new Date().setDate(new Date().getDate() + 1),
+        $gte: new Date(today),
+        $lte: new Date(tomorrow),
       },
     });
     const teamsAttended = await EventDay.count({});
