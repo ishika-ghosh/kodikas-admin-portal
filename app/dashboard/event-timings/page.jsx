@@ -2,7 +2,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal } from "@components/Modal";
+import Loader from "@components/Loader";
 function Timings() {
+  const [loading, setLoading] = useState(false);
   const [times, setTimes] = useState([]);
   const [modal, setModal] = useState(false);
   const [currentId, setCurrentId] = useState(null);
@@ -13,9 +15,11 @@ function Timings() {
   });
   const getTimes = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get("/api/event-times");
       console.log(data);
       setTimes(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +85,9 @@ function Timings() {
       alert(data.message);
     }
   };
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="relative h-screen">
       <div className="flex flex-col">
         <div className="overflow-x-auto">

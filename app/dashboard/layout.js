@@ -1,3 +1,4 @@
+import SideBar from "@components/SideBar";
 import Navbar from "@components/Navbar";
 
 export const metadata = {
@@ -5,10 +6,11 @@ export const metadata = {
 };
 function DashboardLayout({ children }) {
   return (
-    <body>
+    <>
       <Navbar />
+      <SideBar />
       <div className="ml-80 margin-responsive">{children}</div>
-    </body>
+    </>
   );
 }
 

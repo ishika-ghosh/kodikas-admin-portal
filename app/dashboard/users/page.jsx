@@ -2,24 +2,30 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Loader from "./../../../components/Loader";
 
 function Users() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getData = async () => {
       try {
+        setLoading(true);
         const {
           data: { data },
         } = await axios.get("/api/users");
         console.log(data);
         setUsers(data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
     getData();
   }, []);
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <>
       <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700 ">
         <div className="w-full mb-1">
