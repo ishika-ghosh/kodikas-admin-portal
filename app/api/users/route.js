@@ -5,7 +5,8 @@ import { getDetails } from "@controllers/getDetails";
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") || "";
-  const sort = searchParams.get("sort") || "createdAt";
+  const sort = searchParams.get("sort") || "";
+  const page = searchParams.get("page") || 1;
   const queries = search
     ? {
         $or: [
@@ -14,14 +15,19 @@ export async function GET(request) {
         ],
       }
     : {};
+  const limit = 2;
+  const skip = (page - 1) * limit;
   console.log({ queries });
   console.log({ sort });
   try {
     await connectToDatabase();
-    const users = await User.find(queries).sort(sort);
+    const count = await User.find(queries).count();
+    const users = await User.find(queries).sort(sort).skip(skip).limit(limit);
     return NextResponse.json({
       success: true,
       message: "All registered teams",
+      count: Number(count),
+      limit: Number(limit),
       data: users,
     });
   } catch (error) {
