@@ -8,7 +8,6 @@ export const getDetails = (request) => {
       }
       return res;
     });
-    console.log(decoded);
     return decoded;
   } catch (error) {
     console.log(error);

@@ -1,5 +1,7 @@
 "use client";
+import ConfirmationModal from "@components/ConfirmationModal";
 import Loader from "@components/Loader";
+import QualifierInput from "@components/QualifierInput";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -8,23 +10,71 @@ function TeamDetails({ params }) {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [timings, setTimigs] = useState([]);
+  const [eventId, setEventId] = useState("");
+  const [reqBody, setReqBody] = useState(null);
+  const [modalData, setModalData] = useState({
+    team: "",
+    event: "",
+  });
+  const [checkbox, setCheckbox] = useState(new Array(4).fill(false));
   const getTeamDetails = async () => {
     const { teamId } = params;
     try {
       setLoading(true);
       const { data } = await axios.get(`/api/teams/${teamId}`);
       const { data: timeData } = await axios.get("/api/event-times");
-      console.log(timeData);
-      console.log(data);
       setLoading(false);
       if (!data) {
         router.push("/404");
       }
       setDetails(data);
+      setCheckbox([data?.first, data?.second, data?.third, data?.lunch]);
       setTimigs(timeData);
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleChange = (ind, req, eventName) => {
+    setCheckbox(checkbox.map((item, i) => (i === ind ? !item : item)));
+    setReqBody(req);
+    const e = getEventId(timings, eventName);
+    setEventId(e);
+    setModalData({
+      team: details?.team?.teamName.toUpperCase(),
+      event: eventName,
+    });
+  };
+  const handleSubmit = async () => {
+    try {
+      const { teamId } = params;
+      const { data } = await axios.put(
+        `/api/teams/${teamId}?eventid=${eventId}`,
+        reqBody
+      );
+      if (!data) {
+        router.push("/404");
+      }
+      setDetails(data);
+      handleCancel();
+    } catch (error) {
+      console.log(error);
+      const {
+        response: { data },
+      } = error;
+      alert(data.message);
+      handleCancel();
+    }
+  };
+  const handleCancel = () => {
+    setCheckbox([
+      details?.first,
+      details?.second,
+      details?.third,
+      details?.lunch,
+    ]);
+    setReqBody(null);
+    setModalData({ team: "", event: "" });
+    setEventId(null);
   };
   useEffect(() => {
     getTeamDetails();
@@ -33,8 +83,15 @@ function TeamDetails({ params }) {
     <Loader />
   ) : (
     <div className="container my-10 mx-auto md:px-6">
+      {eventId && (
+        <ConfirmationModal
+          modalData={modalData}
+          handleSubmit={handleSubmit}
+          handleCancel={handleCancel}
+        />
+      )}
       <section className="mb-32 text-center lg:text-left">
-        <h2 className="mb-12 text-center text-xl font-bold">
+        <h2 className="mb-12 text-xl font-bold">
           Meet the Team{" "}
           <u className="text-primary dark:text-primary-400">
             {details?.team?.teamName.toUpperCase()}
@@ -113,81 +170,48 @@ function TeamDetails({ params }) {
           </p>
           <ul className="my-10 items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-              {!details?.first ? (
-                <div className="flex items-center pl-3">
-                  <input
-                    disabled={!checkTime(timings, "First Round")}
-                    id="vue-checkbox-list"
-                    type="checkbox"
-                    value={details?.first}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                  />
-                  <label
-                    htmlFor="vue-checkbox-list"
-                    className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    First Round
-                  </label>
-                </div>
-              ) : (
-                <p className="flex items-center pl-3">
-                  First Round{" "}
-                  <span className="bg-green-100 text-green-800 text-xs font-medium ml-2 px-2.5 py-0.5 rounded-md dark:bg-gray-700 dark:text-green-400 border border-green-100 dark:border-green-500">
-                    Qualified
-                  </span>
-                </p>
-              )}
+              <QualifierInput
+                qualified={details?.first}
+                isDisabled={!checkTime(timings, "First Round")}
+                isChecked={checkbox[0]}
+                handleChange={() =>
+                  handleChange(0, { first: !details?.first }, "First Round")
+                }
+                cardTitle="First Round"
+              />
             </li>
             <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-              <div className="flex items-center pl-3">
-                <input
-                  disabled={!checkTime(timings, "2nd Round")}
-                  id="react-checkbox-list"
-                  type="checkbox"
-                  value={details?.second}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <label
-                  htmlFor="react-checkbox-list"
-                  className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Second Round
-                </label>
-              </div>
+              <QualifierInput
+                qualified={details?.second}
+                isDisabled={!checkTime(timings, "2nd Round")}
+                isChecked={checkbox[1]}
+                handleChange={() =>
+                  handleChange(1, { second: !details?.second }, "2nd Round")
+                }
+                cardTitle={"Second Round"}
+              />
             </li>
             <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-              <div className="flex items-center pl-3">
-                <input
-                  disabled={!checkTime(timings, "3rd Round")}
-                  id="angular-checkbox-list"
-                  type="checkbox"
-                  value={details?.third}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <label
-                  htmlFor="angular-checkbox-list"
-                  className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Final Round
-                </label>
-              </div>
+              <QualifierInput
+                qualified={details?.third}
+                isDisabled={!checkTime(timings, "3rd Round")}
+                isChecked={checkbox[2]}
+                handleChange={() =>
+                  handleChange(2, { third: !details?.third }, "3rd Round")
+                }
+                cardTitle={"Final Round"}
+              />
             </li>
             <li className="w-full dark:border-gray-600">
-              <div className="flex items-center pl-3">
-                <input
-                  disabled={!checkTime(timings, "Lunch")}
-                  id="laravel-checkbox-list"
-                  type="checkbox"
-                  value={details?.lunch}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <label
-                  htmlFor="laravel-checkbox-list"
-                  className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Lunch
-                </label>
-              </div>
+              <QualifierInput
+                qualified={details?.lunch}
+                isDisabled={!checkTime(timings, "Lunch")}
+                isChecked={checkbox[3]}
+                handleChange={() =>
+                  handleChange(3, { lunch: !details?.lunch }, "Lunch")
+                }
+                cardTitle={"Lunch"}
+              />
             </li>
           </ul>
         </div>
@@ -201,14 +225,20 @@ export default TeamDetails;
 const checkTime = (times, time) => {
   let flag = false;
   times?.forEach((ele) => {
-    if (ele.name === time) {
-      console.log(ele.name);
+    if (ele.name.toLowerCase() === time.toLowerCase()) {
       const today = new Date();
-      console.log(
-        today >= new Date(ele.startTime) && today < new Date(ele.endTime)
-      );
+
       flag = today >= new Date(ele.startTime) && today < new Date(ele.endTime);
     }
   });
   return flag;
+};
+const getEventId = (times, name) => {
+  let id = "";
+  times?.forEach((time) => {
+    if (time.name.toLowerCase() === name.toLowerCase()) {
+      id = time._id;
+    }
+  });
+  return id;
 };
