@@ -156,6 +156,7 @@ function Timings() {
           modalData={modalData}
           setModalData={setModalData}
           handleUpdate={handleUpdate}
+          showInput={true}
         />
       )}
     </div>

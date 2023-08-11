@@ -7,6 +7,24 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     await connectToDatabase();
+    const { searchParams } = new URL(req.url);
+    const startTime = searchParams.get("start-time");
+    const endTime = searchParams.get("end-time");
+    if (startTime && endTime) {
+      const transactions = await Payment.find({
+        createdAt: {
+          $gte: new Date(startTime),
+          $lte: new Date(endTime),
+        },
+      })
+        .populate({ path: "team", populate: ["leader"] })
+        .populate("admin");
+      return NextResponse.json({
+        success: true,
+        message: "Transaction Details",
+        transactions,
+      });
+    }
     let transactions = await Payment.find({})
       .populate({ path: "team", populate: ["leader"] })
       .populate("admin");

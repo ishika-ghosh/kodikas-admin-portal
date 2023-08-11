@@ -1,9 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Modal } from "@components/Modal";
+import axios from "axios";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [times, setTimes] = useState({
+    startTime: new Date(),
+    endTime: new Date(),
+  });
   useEffect(() => {
     const getData = async () => {
       try {
@@ -17,8 +23,35 @@ function Transactions() {
     };
     getData();
   }, []);
+  const handleSubmit = async () => {
+    console.log(times);
+    if (times.startTime > times.endTime) {
+      alert("start should be less than end time");
+      return;
+    }
+    try {
+      const { data } = await axios.get(
+        `/api/transactions?start-time=${new Date(
+          times.startTime
+        )}&end-time=${new Date(times.endTime)}`
+      );
+      setTransactions(data.transactions);
+      setOpenModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
+      {openModal && (
+        <Modal
+          closeModal={() => setOpenModal(false)}
+          showInput={false}
+          modalData={times}
+          setModalData={setTimes}
+          handleUpdate={handleSubmit}
+        />
+      )}
       <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700 ">
         <div className="w-full mb-1">
           <div className="mb-4">
@@ -46,26 +79,29 @@ function Transactions() {
             </div>
             <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
               {/* Filters */}
-              <Link
-                href="/dashboard/create-user"
-                type="button"
-                data-modal-toggle="add-user-modal"
-                className="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                <svg
-                  className="w-5 h-5 mr-2 -ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+              {transactions?.length ? (
+                <button
+                  href="/dashboard/create-user"
+                  type="button"
+                  data-modal-toggle="add-user-modal"
+                  className="mr-10 inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  onClick={() => setOpenModal(true)}
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                Filter (don't click)
-              </Link>
+                  <svg
+                    className="w-5 h-5 mr-2 -ml-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                  Filter
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
@@ -116,7 +152,7 @@ function Transactions() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                  {transactions.map((transaction) => (
+                  {transactions?.map((transaction) => (
                     <tr
                       className="hover:bg-gray-100 dark:hover:bg-gray-700"
                       key={transaction._id}
