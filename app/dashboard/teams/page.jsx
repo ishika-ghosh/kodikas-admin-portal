@@ -8,36 +8,37 @@ import Image from "next/image";
 function Teams() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [yearSort, setYearSort] = useState(0);
-  const [deptSort, setDeptSort] = useState(0);
+  const [filter, setFilter] = useState(0);
+  const [pageNum, setPageNum] = useState(1);
   const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(0);
+  const [count, setCount] = useState(0);
   useEffect(() => {
     const handler = async () => {
       try {
-        let sort;
-        if (!yearSort && !deptSort) sort = "";
-        if (yearSort) sort = yearSort > 0 ? "year" : "-year";
-        if (deptSort) sort = deptSort > 0 ? "department" : "-department";
-        console.log(sort);
-        const {
-          data: { data },
-        } = await axios.get(`/api/events?search=${search}&sort=${sort}`);
+        const
+          { data }
+            = await axios.get(`/api/teams?search=${search}&filter=${filter}&page=${pageNum}`);
+        console.log("am all time useEffect" + data.teams);
         setTeams(data.teams);
+        setCount(data.count);
       } catch (error) {
         console.log(error);
       }
     };
     handler();
-  }, [yearSort, deptSort, search]);
+  }, [filter, search, pageNum]);
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`/api/events`);
+        const { data } = await axios.get(`/api/teams`);
         setLoading(false);
         setTeams(data.teams);
-        console.log(data.teams);
+        setLimit(data.limit);
+        setCount(data.count);
+        console.log("am first time useEffect" + data.teams);
       } catch (error) {
         console.log(error);
       }
@@ -75,27 +76,21 @@ function Teams() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
-              <Link
-                href="/dashboard/create-team"
-                type="button"
-                data-modal-toggle="add-team-modal"
-                className="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                <svg
-                  className="w-5 h-5 mr-2 -ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                Add Team (if needed)
-              </Link>
+            <div className="flex items-center ml-auto space-x-2 sm:space-x-3 mr-5">
+              <div className="flex items-center ml-auto space-x-2">
+                <input type="radio" value="First" name="event" onChange={() => {
+                  setFilter("first");
+                }} /> <div>First</div>
+                <input type="radio" value="Second" name="event" onChange={() => {
+                  setFilter("second");
+                }} /> <div>Second</div>
+                <input type="radio" value="Female" name="event" onChange={() => {
+                  setFilter("lunch");
+                }} /> <div>Lunch</div>
+                <input type="radio" value="Other" name="event" onChange={() => {
+                  setFilter("third");
+                }} /> <div>Final</div>
+              </div>
             </div>
           </div>
         </div>
@@ -203,6 +198,33 @@ function Teams() {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center fixed mb-10 left-1/2 bottom-0">
+          <span className="text-sm text-gray-700 dark:text-gray-400">
+            Showing <span className="font-semibold text-gray-900 dark:text-white">{Math.min(count, (pageNum - 1) * limit + 1)}</span> to <span className="font-semibold text-gray-900 dark:text-white">{Math.min(count, pageNum * limit)}</span> of <span className="font-semibold text-gray-900 dark:text-white">{count}</span> Entries
+          </span>
+          <div className="inline-flex mt-2 xs:mt-0">
+            <button className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => {
+              setPageNum((prev) => {
+                return Math.max(prev - 1, 1);
+              });
+            }}>
+              <svg className="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
+              </svg>
+              Prev
+            </button>
+            <button className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => {
+              setPageNum((prev) => {
+                return Math.min(prev + 1, Math.floor((count - 1) / limit) + 1);
+              });
+            }}>
+              Next
+              <svg className="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
