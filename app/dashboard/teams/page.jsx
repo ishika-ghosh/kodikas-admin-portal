@@ -22,7 +22,7 @@ function Teams() {
         const {
           data: { data },
         } = await axios.get(`/api/events?search=${search}&sort=${sort}`);
-        setTeams(data);
+        setTeams(data.teams);
       } catch (error) {
         console.log(error);
       }
@@ -34,12 +34,10 @@ function Teams() {
     const getData = async () => {
       try {
         setLoading(true);
-        const {
-          data: { data },
-        } = await axios.get(`/api/events`);
+        const { data } = await axios.get(`/api/events`);
         setLoading(false);
-        setTeams(data);
-        console.log("Data" + teams);
+        setTeams(data.teams);
+        console.log(data.teams);
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +51,6 @@ function Teams() {
       <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700 ">
         <div className="w-full mb-1">
           <div className="mb-4">
-
             <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
               All Teams
             </h1>
@@ -140,7 +137,6 @@ function Teams() {
                     >
                       Entry time
                     </th>
-
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
@@ -148,13 +144,26 @@ function Teams() {
                     <tr
                       className="hover:bg-gray-100 dark:hover:bg-gray-700"
                       key={team._id}
-                      onClick={() => { window.location.href = `http://localhost:3000/dashboard/teams/${team._id}`; }}
+                      onClick={() => {
+                        window.location.href = `http://localhost:3000/dashboard/teams/${team._id}`;
+                      }}
                     >
-
                       <td className="flex items-center p-4  space-x-6 whitespace-nowrap">
                         <div className="flex -space-x-4">
-                          <Image className="border-2 border-white rounded-full dark:border-gray-800" src={team.team.teamMember.image} width="35" height="35" alt="" />
-                          <Image className="border-2 border-white rounded-full dark:border-gray-800" src={team.team.leader.image} width="35" height="35" alt="" />
+                          <Image
+                            className="border-2 border-white rounded-full dark:border-gray-800"
+                            src={team.team.teamMember.image}
+                            width="35"
+                            height="35"
+                            alt=""
+                          />
+                          <Image
+                            className="border-2 border-white rounded-full dark:border-gray-800"
+                            src={team.team.leader.image}
+                            width="35"
+                            height="35"
+                            alt=""
+                          />
                         </div>
                       </td>
                       <td className="max-w-sm p-4 overflow-hidden text-base font-normal text-gray-500 truncate xl:max-w-xs dark:text-gray-400">
@@ -166,17 +175,21 @@ function Teams() {
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          <div class="font-medium dark:text-white">
+                          <div className="font-medium dark:text-white">
                             <div>{team.team.leader.name}</div>
-                            <div class="text-sm text-gray-500 dark:text-gray-400">{team.team.leader.email}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {team.team.leader.email}
+                            </div>
                           </div>
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          <div class="font-medium dark:text-white">
+                          <div className="font-medium dark:text-white">
                             <div>{team.team.teamMember.name}</div>
-                            <div class="text-sm text-gray-500 dark:text-gray-400">{team.team.teamMember.email}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {team.team.teamMember.email}
+                            </div>
                           </div>
                         </div>
                       </td>

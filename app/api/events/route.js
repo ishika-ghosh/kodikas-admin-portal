@@ -10,8 +10,11 @@ import EventDay from "@models/eventDay";
 export async function GET() {
   try {
     await connectToDatabase();
-    const eventsOfAllTeams = await EventDay.find().populate("team");
-    return NextResponse.json(eventsOfAllTeams);
+    const eventsOfAllTeams = await EventDay.find().populate({
+      path: "team",
+      populate: [{ path: "teamMember" }, { path: "leader" }],
+    });
+    return NextResponse.json({ teams: eventsOfAllTeams });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

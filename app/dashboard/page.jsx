@@ -68,6 +68,7 @@ function page() {
           </div>
         </dl>
       </div>
+      <div className="pulsating-circle"></div>
     </div>
   );
 }

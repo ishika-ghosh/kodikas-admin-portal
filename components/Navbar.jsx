@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 
 function Navbar() {
-  const [adminDetails, setAdminDetails] = useState(null)
+  const [adminDetails, setAdminDetails] = useState(null);
   useEffect(() => {
     const getDetails = async () => {
-      const details = await fetch('/api/admin/getDetails');
+      const details = await fetch("/api/admin");
       const { admin } = await details.json();
       setAdminDetails(admin);
-    }
+    };
     getDetails();
-  }, [])
+  }, []);
 
   return (
     <nav className="ml-80 margin-responsive bg-white border-gray-200 dark:bg-gray-900">

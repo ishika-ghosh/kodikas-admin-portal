@@ -9,17 +9,24 @@
 
 }
 
-.-translate-x-full.open {
-  margin-top: 50px;
-  --tw-translate-x: 0%
-}
 .modal-position{
   margin-left: 30%;  
   margin-top: 10%;
-
+    
 }
+
 @media only screen and (max-width: 600px){
+  .-translate-x-full.open {
+    --tw-translate-x: 0%
+  }
+  .-translate-x-full.open.auto-width{
+    width: auto;
+  }
   .margin-responsive {
       margin-left: 0px;
+    }
+      
+    .responsive-width{
+      width: 100%;
     }
 }
