@@ -4,6 +4,7 @@ export const getDetails = (request) => {
     const token = request.cookies.get("token")?.value || "";
     const decoded = jwt.verify(token, process.env.MONGO_SECRET, (err, res) => {
       if (err) {
+        console.log(err);
         return null;
       }
       return res;
