@@ -6,7 +6,7 @@ import Payment from "@models/payment";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import EventDay from "@models/eventDay";
-import { getDetails } from "@controllers/getDetails";
+import { getDetails } from "@utils/getDetails";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);

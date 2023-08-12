@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import EventTimings from "@models/eventTimings";
 import Admin from "@models/admin";
-import { getDetails } from "@controllers/getDetails";
+import { getDetails } from "@utils/getDetails";
 
 export async function POST(req) {
   await connectToDatabase();

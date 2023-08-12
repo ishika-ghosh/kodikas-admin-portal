@@ -3,6 +3,7 @@ import { connectToDatabase } from "@utils/db";
 import Admin from "@models/admin";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+// import { signJWT } from "@utils/jwt";
 // import { cookies } from "next/headers";
 
 export async function POST(request) {
@@ -34,7 +35,9 @@ export async function POST(request) {
     const response = NextResponse.json({
       message: "login success",
       success: true,
+      token: token,
     });
+    // localStorage.setItem("token", token);
     response.cookies.set("token", token);
 
     return response;

@@ -4,7 +4,7 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@controllers/getDetails";
+import { getDetails } from "@utils/getDetails";
 import EventDay from "@models/eventDay";
 export async function GET(req) {
   try {

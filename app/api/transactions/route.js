@@ -2,7 +2,7 @@ import Payment from "@models/payment";
 import Admin from "@models/admin";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@controllers/getDetails";
+import { getDetails } from "@utils/getDetails";
 export async function GET(req) {
   try {
     await connectToDatabase();
