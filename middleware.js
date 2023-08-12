@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-// import { getDetails } from "@controllers/getDetails";
 
 export function middleware(request) {
   const path = request.nextUrl.pathname;
