@@ -14,22 +14,22 @@ function CreateUser() {
   });
   const [checked, setChecked] = useState(false);
 
-  useEffect(() => {
-    const getAdmin = async () => {
-      try {
-        const { data } = await axios.get("/api/admin");
-        if (data?.adminDetails) {
-          return;
-        } else {
-          router.push("/dashboard");
-        }
-      } catch (error) {
-        console.log(error);
-        router.push("/dashboard");
-      }
-    };
-    getAdmin();
-  }, []);
+  // useEffect(() => {
+  //   const getAdmin = async () => {
+  //     try {
+  //       const { data } = await axios.get("/api/admin");
+  //       if (data?.adminDetails) {
+  //         return;
+  //       } else {
+  //         router.push("/dashboard");
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       router.push("/dashboard");
+  //     }
+  //   };
+  //   getAdmin();
+  // }, []);
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };

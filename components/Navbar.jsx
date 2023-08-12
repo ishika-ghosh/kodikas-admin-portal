@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 function Navbar() {
-  const [adminDetails, setAdminDetails] = useState(null);
-  useEffect(() => {
-    const getDetails = async () => {
-      const details = await fetch("/api/admin");
-      const { admin } = await details.json();
-      setAdminDetails(admin);
-    };
-    getDetails();
-  }, []);
+  // const [adminDetails, setAdminDetails] = useState(null);
+  // useEffect(() => {
+  //   const getDetails = async () => {
+  //     const { admin } = ;
+  //     setAdminDetails(admin);
+  //   };
+  //   getDetails();
+  // }, []);
 
   return (
     <nav className="ml-80 margin-responsive bg-white border-gray-200 dark:bg-gray-900">
@@ -21,7 +20,7 @@ function Navbar() {
             Kodikas 2023
           </span>
         </a>
-        <div className="flex items-center md:order-2">
+        {/* <div className="flex items-center md:order-2">
           <span className="mr-7 self-center text-m font-semibold whitespace-nowrap dark:text-white">
             {adminDetails?.name.split("@")[0]}
           </span>
@@ -30,7 +29,7 @@ function Navbar() {
               {adminDetails?.name[0]}
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
     </nav>
   );
