@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 export const getDetails = (request) => {
   try {
-    const token = request.cookies.get("token")?.value || "";
+    const token = request.cookies.get("token")?.value;
     console.log(token);
     const decoded = jwt.verify(token, process.env.MONGO_SECRET, (err, res) => {
       if (err) {
