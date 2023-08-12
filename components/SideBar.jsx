@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function SideBar() {
-  // const router = useRouter();
+  const router = useRouter();
   const [classes, setClasses] = useState(
     "fixed top-0 left-0 z-40 w-1/5 h-screen transition-transform -translate-x-full sm:translate-x-0"
   );
