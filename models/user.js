@@ -23,6 +23,10 @@ const userSchema = new Schema({
   department: {
     type: String,
   },
+  phoneNumber: {
+    type: String,
+    required: [true, "Phone number is required"],
+  },
 });
 
 const User = (models && models.User) || model("User", userSchema);

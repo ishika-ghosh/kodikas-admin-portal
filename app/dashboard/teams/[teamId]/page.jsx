@@ -54,7 +54,12 @@ function TeamDetails({ params }) {
       if (!data) {
         router.push("/404");
       }
-      setDetails(data);
+      setDetails(data?.updatedEvent);
+      if (!data?.success) {
+        alert(
+          "Due to some technical fault mail not send Kindly inform the team Some how"
+        );
+      }
       handleCancel();
     } catch (error) {
       console.log(error);
