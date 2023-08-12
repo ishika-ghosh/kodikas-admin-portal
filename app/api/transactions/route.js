@@ -4,6 +4,7 @@ import User from "@models/user";
 import Admin from "@models/admin";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
+import { getDetails } from "@controllers/getDetails";
 export async function GET(req) {
   try {
     await connectToDatabase();
