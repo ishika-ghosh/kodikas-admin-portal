@@ -29,14 +29,14 @@ export async function POST(request) {
       name: admin.username,
     };
     const token = jwt.sign(tokenData, process.env.MONGO_SECRET, {
-      expiresIn: "2d",
+      expiresIn: "1d",
     });
     const response = NextResponse.json({
       message: "login success",
       success: true,
     });
     response.cookies.set("token", token);
-    
+
     return response;
   } catch (error) {
     console.log(error);
