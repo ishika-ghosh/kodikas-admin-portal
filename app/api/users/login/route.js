@@ -35,7 +35,6 @@ export async function POST(request) {
     const response = NextResponse.json({
       message: "login success",
       success: true,
-      token: token,
     });
     // localStorage.setItem("token", token);
     response.cookies.set("token", token);
