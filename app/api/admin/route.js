@@ -1,12 +1,20 @@
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@utils/getDetails";
 import Admin from "@models/admin";
-export async function GET(req) {
+import verify from "jsonwebtoken/verify";
+export async function GET(request) {
   try {
     await connectToDatabase();
+    const token = request.cookies.get("token")?.value || "";
+    const admin = verify(token, process.env.MONGO_SECRET, (err, res) => {
+      if (err) {
+        console.log(err);
+        return null;
+      }
+      return res;
+    });
+
     // console.log(req);
-    const admin = await getDetails(req);
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
