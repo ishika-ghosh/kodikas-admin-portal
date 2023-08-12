@@ -1,5 +1,6 @@
 import verify from "jsonwebtoken/verify";
 export const getDetails = (request) => {
+  console.log(request);
   try {
     const token = request.cookies.get("token")?.value || "";
     const decoded = verify(token, process.env.MONGO_SECRET, (err, res) => {

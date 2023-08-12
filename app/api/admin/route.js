@@ -5,6 +5,7 @@ import Admin from "@models/admin";
 export async function GET(req) {
   try {
     await connectToDatabase();
+    console.log(req);
     const admin = getDetails(req);
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
