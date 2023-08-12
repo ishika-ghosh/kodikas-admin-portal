@@ -7,6 +7,24 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     await connectToDatabase();
+    const admin = getDetails(req);
+    if (!admin) {
+      return NextResponse.json(
+        { message: "Not a valid user" },
+        { status: 403 }
+      );
+    }
+    const id = admin?.id;
+    const adminData = await Admin.findById(id);
+    if (!adminData.isSuperAdmin) {
+      return NextResponse.json(
+        {
+          message:
+            "Only super admins are allowes to activate or disable a link",
+        },
+        { status: 400 }
+      );
+    }
     const { searchParams } = new URL(req.url);
     const startTime = searchParams.get("start-time");
     const endTime = searchParams.get("end-time");

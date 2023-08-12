@@ -2,8 +2,10 @@
 import { useState, useEffect } from "react";
 import { Modal } from "@components/Modal";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 function Transactions() {
+  const router = useRouter();
   const [transactions, setTransactions] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [times, setTimes] = useState({
@@ -19,6 +21,7 @@ function Transactions() {
         setTransactions(data.transactions);
       } catch (error) {
         console.log(error);
+        router.push("/dashboard");
       }
     };
     getData();

@@ -10,10 +10,24 @@ import { sendEmail } from "@controllers/sendEmail";
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
+    const admin = getDetails(req);
+    if (!admin) {
+      return NextResponse.json({ error: "Not valid user", success: false });
+    }
+    const adminId = admin?.id;
+    const adminDetails = await Admin.findById(adminId);
+    //if not a super admin then can not allow then to change the details
+    if (!adminDetails.isSuperAdmin) {
+      return NextResponse.json(
+        { message: "Only super admin can change this details" },
+        { status: 400 }
+      );
+    }
     const { id } = params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(null);
     }
+
     const details = await EventDay.findById(id).populate({
       path: "team",
       populate: [{ path: "teamMember" }, { path: "leader" }],

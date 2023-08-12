@@ -2,8 +2,23 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import User from "@models/user";
 import { getDetails } from "@controllers/getDetails";
+import Admin from "@models/admin";
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
+  const admin = getDetails(request);
+  if (!admin) {
+    return NextResponse.json({ error: "Not valid user", success: false });
+  }
+  const adminId = admin?.id;
+  const adminDetails = await Admin.findById(adminId);
+  //if not a super admin then can not allow then to change the details
+  if (!adminDetails.isSuperAdmin) {
+    return NextResponse.json(
+      { message: "Only super admin can change this details" },
+      { status: 400 }
+    );
+  }
   const search = searchParams.get("search") || "";
   const sort = searchParams.get("sort") || "";
   const page = searchParams.get("page") || 1;

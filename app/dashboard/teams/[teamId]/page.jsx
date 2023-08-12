@@ -32,6 +32,7 @@ function TeamDetails({ params }) {
       setTimigs(timeData);
     } catch (error) {
       console.log(error);
+      router.push("/dashboard");
     }
   };
   const handleChange = (ind, req, eventName) => {

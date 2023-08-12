@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserForm from "@components/UserForm";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 function CreateUser() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
@@ -11,6 +13,23 @@ function CreateUser() {
     isSuperAdmin: false,
   });
   const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    const getAdmin = async () => {
+      try {
+        const { data } = await axios.get("/api/admin");
+        if (data?.adminDetails) {
+          return;
+        } else {
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        console.log(error);
+        router.push("/dashboard");
+      }
+    };
+    getAdmin();
+  }, []);
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };

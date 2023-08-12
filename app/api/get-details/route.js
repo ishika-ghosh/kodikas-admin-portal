@@ -11,6 +11,7 @@ export async function GET() {
     const today = new Date().toDateString();
     const tomorrow = new Date().setDate(new Date().getDate() + 1);
     const teams = await Team.count({});
+    const teamsWithPayment = await Team.count({ payment: true });
     const users = await User.count({});
     const transactions = await Payment.count({});
     const todaysTransactions = await Payment.count({
@@ -26,6 +27,7 @@ export async function GET() {
       transactions: transactions,
       todaysTransactions: todaysTransactions,
       teamsAttended: teamsAttended,
+      teamsWithPayment: teamsWithPayment,
     });
   } catch (error) {
     console.error("Error ", error);

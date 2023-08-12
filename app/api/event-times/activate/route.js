@@ -17,9 +17,13 @@ export async function POST(req) {
     const id = admin?.id;
     const adminData = await Admin.findById(id);
     if (!adminData.isSuperAdmin) {
-      return NextResponse.json({
-        message: "Only super admins are allowes to activate or disable a link",
-      });
+      return NextResponse.json(
+        {
+          message:
+            "Only super admins are allowes to activate or disable a link",
+        },
+        { status: 400 }
+      );
     }
     const { eventId } = await req.json();
     const newEvent = await EventTimings.findByIdAndUpdate(

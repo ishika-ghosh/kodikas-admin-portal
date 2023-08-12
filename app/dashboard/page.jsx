@@ -41,6 +41,12 @@ function page() {
               Teams Registerd till date
             </dd>
           </div>
+          <div className="flex flex-col items-center justify-center">
+            <dt className="mb-2 text-3xl font-extrabold">{details?.teamsWithPayment}</dt>
+            <dd className="text-center text-gray-500 dark:text-gray-400">
+              Teams Completed Payment till date
+            </dd>
+          </div>
 
           <div className="flex flex-col items-center justify-center">
             <dt className="mb-2 text-3xl font-extrabold">

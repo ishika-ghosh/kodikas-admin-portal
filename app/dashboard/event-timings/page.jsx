@@ -3,7 +3,9 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal } from "@components/Modal";
 import Loader from "@components/Loader";
+import { useRouter } from "next/navigation";
 function Timings() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [times, setTimes] = useState([]);
   const [modal, setModal] = useState(false);
@@ -22,6 +24,7 @@ function Timings() {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      router.push("/dashboard");
     }
   };
   useEffect(() => {
@@ -71,7 +74,7 @@ function Timings() {
   const handleUpdate = async () => {
     try {
       const { data } = await axios.post(
-        `/api/event-times/update/${currentId}`,
+        `/api/event-times/${currentId}`,
         modalData
       );
       console.log(data);

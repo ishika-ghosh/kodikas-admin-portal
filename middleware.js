@@ -12,11 +12,16 @@ export function middleware(request) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   } else {
-    console.log("here");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/", "/api/users", "/signup", "/dashboard"],
+  matcher: [
+    "/",
+    "/api/users/signout",
+    "/api/((?!users|login).*)",
+    "/dashboard",
+    "/dashboard/(.*)",
+  ],
 };
