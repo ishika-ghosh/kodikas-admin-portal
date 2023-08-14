@@ -15,10 +15,10 @@ function Scanner() {
   const [eventData, setEventData] = useState(null);
   useEffect(() => {
     const scanner = new Html5QrcodeScanner("reader", {
-      qrbox: {
-        width: 300,
-        height: 300,
-      },
+      // qrbox: {
+      //   width: 300,
+      //   height: 300,
+      // },
       fps: 5,
     });
 
@@ -30,9 +30,9 @@ function Scanner() {
       // to get team details and setPaymentStatus
       const response = await fetch(`/api/payment?teamid=${qrCodeMessage}`);
       const data = await response.json();
-      setTeamData(data.team);
+      setTeamData(data?.team);
       console.log(data.team);
-      setPaymentStatus(data.team.payment);
+      setPaymentStatus(data?.team?.payment);
       // to get and set timing details
       const timingsResponse = await fetch(`/api/event-times`);
       const timingsResponseData = await timingsResponse.json();
@@ -92,7 +92,7 @@ function Scanner() {
       <div className=" h-screen flex items-center justify-center">
         {detailsConfirmed ? (
           <>
-            <div className="h-screen  -ml-32 flex justify-center flex-col gap-6">
+            <div className="h-screen   flex justify-center flex-col gap-6">
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
@@ -160,7 +160,7 @@ function Scanner() {
             {teamId ? (
               <>
                 {teamData ? (
-                  <div className="h-screen -ml-32 flex items-center justify-center flex-col gap-5">
+                  <div className="h-screen  flex items-center justify-center flex-col gap-5">
                     <Updates
                       payment={paymentStatus}
                       attendance={entryStatus}
@@ -220,7 +220,7 @@ function Scanner() {
                 )}
               </>
             ) : (
-              <div id="reader" className="w-1/2"></div>
+              <div id="reader" className="md:w-1/2 w-full"></div>
             )}
           </>
         )}
