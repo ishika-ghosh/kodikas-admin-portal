@@ -167,6 +167,7 @@ function Teams() {
                       key={team._id}
                       onClick={() => {
                         router.push(`/dashboard/teams/${team._id}`);
+                        // router.push(`/dashboard/teams/${team._id}`);
                       }}
                     >
                       <td className="flex items-center p-4  space-x-6 whitespace-nowrap">

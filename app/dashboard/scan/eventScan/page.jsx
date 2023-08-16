@@ -2,10 +2,12 @@
 import TeamDetails from "@components/TeamDetails";
 import Updates from "@components/Updates";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 function Scanner() {
   const [paymentStatus, setPaymentStatus] = useState(false);
+  const router = useRouter();
   const [entryStatus, setEntryStatus] = useState(false);
   const [lunchStatus, setLunchStatus] = useState(false);
   const [detailsConfirmed, setDetailsConfirmed] = useState(false);
@@ -15,10 +17,10 @@ function Scanner() {
   const [eventData, setEventData] = useState(null);
   useEffect(() => {
     const scanner = new Html5QrcodeScanner("reader", {
-      qrbox: {
-        width: 300,
-        height: 300,
-      },
+      // qrbox: {
+      //   width: 300,
+      //   height: 300,
+      // },
       fps: 5,
     });
 
@@ -30,9 +32,9 @@ function Scanner() {
       // to get team details and setPaymentStatus
       const response = await fetch(`/api/payment?teamid=${qrCodeMessage}`);
       const data = await response.json();
-      setTeamData(data.team);
+      setTeamData(data?.team);
       console.log(data.team);
-      setPaymentStatus(data.team.payment);
+      setPaymentStatus(data?.team?.payment);
       // to get and set timing details
       const timingsResponse = await fetch(`/api/event-times`);
       const timingsResponseData = await timingsResponse.json();
@@ -84,7 +86,8 @@ function Scanner() {
         body: JSON.stringify({ teamId, lunchStatus }),
       });
     }
-    window.location.href = "http://localhost:3000/dashboard/scan";
+    router.push("/dashboard/scan");
+    // window.location.href = "http://localhost:3000/dashboard/scan";
   };
 
   return (
@@ -92,7 +95,7 @@ function Scanner() {
       <div className=" h-screen flex items-center justify-center">
         {detailsConfirmed ? (
           <>
-            <div className="h-screen  -ml-32 flex justify-center flex-col gap-6">
+            <div className="h-screen   flex justify-center flex-col gap-6">
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
@@ -160,7 +163,7 @@ function Scanner() {
             {teamId ? (
               <>
                 {teamData ? (
-                  <div className="h-screen -ml-32 flex items-center justify-center flex-col gap-5">
+                  <div className="h-screen  flex items-center justify-center flex-col gap-5">
                     <Updates
                       payment={paymentStatus}
                       attendance={entryStatus}
@@ -220,7 +223,7 @@ function Scanner() {
                 )}
               </>
             ) : (
-              <div id="reader" className="w-1/2"></div>
+              <div id="reader" className="md:w-1/2 w-full"></div>
             )}
           </>
         )}

@@ -2,19 +2,21 @@
 import TeamDetails from "@components/TeamDetails";
 import Updates from "@components/Updates";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 function Scanner() {
     const [paymentStatus, setPaymentStatus] = useState(false);
+    const router = useRouter();
     const [detailsConfirmed, setDetailsConfirmed] = useState(false);
     const [teamId, setTeamId] = useState(null);
     const [teamData, setTeamData] = useState(null);
     useEffect(() => {
         const scanner = new Html5QrcodeScanner("reader", {
-            qrbox: {
-                width: 300,
-                height: 300,
-            },
+            // qrbox: {
+            //     width: 300,
+            //     height: 300,
+            // },
             fps: 5,
         });
 
@@ -44,7 +46,8 @@ function Scanner() {
             },
             body: JSON.stringify({ teamId, paymentStatus }),
         });
-        window.location.href = 'http://localhost:3000/dashboard/transactions';
+        router.push("/dashboard/transactions")
+        // window.location.href = 'http://localhost:3000/dashboard/transactions';
     };
 
     return (
@@ -52,7 +55,7 @@ function Scanner() {
             <div className=" h-screen flex items-center justify-center">
                 {detailsConfirmed ? (
                     <>
-                        <div className="h-screen  -ml-32 flex justify-center flex-col gap-6">
+                        <div className="h-screen flex justify-center flex-col gap-6">
                             <div className="flex items-center mb-4">
                                 <input
                                     type="checkbox"
@@ -94,14 +97,14 @@ function Scanner() {
                         {teamId ? (
                             <>
                                 {teamData ? (
-                                    <div className="h-screen -ml-32 flex items-center justify-center flex-col gap-5">
+                                    <div className="h-screen  flex items-center justify-center flex-col gap-5">
                                         {/* Updates */}
                                         <Updates payment={paymentStatus} />
                                         <TeamDetails props={teamData} />
                                         <button
                                             type="button"
                                             className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                                            disabled={paymentStatus}
+                                            disabled={paymentStatus || !teamData.teamMember}
                                             onClick={() => setDetailsConfirmed(true)}
                                         >
                                             Verified and Proceed
@@ -149,7 +152,7 @@ function Scanner() {
                                 )}
                             </>
                         ) : (
-                            <div id="reader" className="w-1/2"></div>
+                            <div id="reader" className="md:w-1/2 w-full"></div>
                         )}
                     </>
                 )}
