@@ -44,6 +44,14 @@ export async function PUT(req) {
           payment: paymentStatus,
         }
       );
+      console.log(updatedData);
+      if (!updatedData) {
+        return NextResponse.json(
+          { message: "Internal Server Error" },
+          { status: 500 }
+        );
+      }
+      console.log(updatedData);
       const addInPayment = await Payment.create({
         team: teamId,
         admin: admin?.id,
