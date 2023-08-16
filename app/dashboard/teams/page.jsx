@@ -166,7 +166,8 @@ function Teams() {
                       className="hover:bg-gray-100 dark:hover:bg-gray-700"
                       key={team._id}
                       onClick={() => {
-                        window.location.href = `http://localhost:3000/dashboard/teams/${team._id}`;
+                        router.push(`/dashboard/teams/${team._id}`);
+                        // window.location.href = `http://localhost:3000/dashboard/teams/${team._id}`;
                       }}
                     >
                       <td className="flex items-center p-4  space-x-6 whitespace-nowrap">

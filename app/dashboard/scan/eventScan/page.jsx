@@ -2,10 +2,12 @@
 import TeamDetails from "@components/TeamDetails";
 import Updates from "@components/Updates";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 function Scanner() {
   const [paymentStatus, setPaymentStatus] = useState(false);
+  const router = useRouter();
   const [entryStatus, setEntryStatus] = useState(false);
   const [lunchStatus, setLunchStatus] = useState(false);
   const [detailsConfirmed, setDetailsConfirmed] = useState(false);
@@ -84,7 +86,8 @@ function Scanner() {
         body: JSON.stringify({ teamId, lunchStatus }),
       });
     }
-    window.location.href = "http://localhost:3000/dashboard/scan";
+    router.push("/dashboard/scan");
+    // window.location.href = "http://localhost:3000/dashboard/scan";
   };
 
   return (
