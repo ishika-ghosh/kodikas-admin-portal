@@ -6,6 +6,7 @@ import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import { getDetails } from "@utils/getDetails";
 import EventDay from "@models/eventDay";
+import sendConfirmationEmail from "@utils/sendEmail";
 
 export async function PUT(req) {
   try {
@@ -15,13 +16,30 @@ export async function PUT(req) {
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const updatedData = await EventDay.updateOne(
-      { team: teamId },
+    const team = await EventDay.findOne({ team: teamId });
+    if (!team) {
+      return NextResponse.json(
+        { message: "Team not found", success: false },
+        { status: 400 }
+      );
+    }
+    const updatedData = await EventDay.findByIdAndUpdate(
+      team?._id,
       {
         lunch: lunchStatus,
-      }
+      },
+      { new: true }
+    ).populate({
+      path: "team",
+      populate: [{ path: "teamMember" }, { path: "leader" }],
+    });
+    // console.log("updatedData: " + updatedData);
+    sendConfirmationEmail(
+      updatedData?.team?.leader,
+      updatedData?.team,
+      updatedData?.team?.leader?.email,
+      { event: 2 }
     );
-    console.log("updatedData: " + updatedData);
     return NextResponse.json({
       success: true,
       updatedData,
@@ -42,13 +60,18 @@ export async function POST(req) {
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const team = await Team.findOne({ team: teamId });
+    const team = await Team.findById(teamId)
+      .populate("leader")
+      .populate("teamMember");
     if (team?.payment) {
       const eventStarted = await EventDay.create({
         team: teamId,
         attendance: entryStatus,
       });
-      console.log("Start: " + eventStarted);
+      // console.log("Start: " + eventStarted);
+      sendConfirmationEmail(team?.leader, team, team?.leader?.email, {
+        event: 1,
+      });
       return NextResponse.json({
         success: true,
         eventStarted,

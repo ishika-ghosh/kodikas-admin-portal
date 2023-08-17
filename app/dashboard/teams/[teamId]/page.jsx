@@ -21,8 +21,12 @@ function TeamDetails({ params }) {
     const { teamId } = params;
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/teams/${teamId}`);
-      const { data: timeData } = await axios.get("/api/event-times");
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teams/${teamId}`
+      );
+      const { data: timeData } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times`
+      );
       setLoading(false);
       if (!data) {
         router.push("/404");
@@ -49,7 +53,7 @@ function TeamDetails({ params }) {
     try {
       const { teamId } = params;
       const { data } = await axios.put(
-        `/api/teams/${teamId}?eventid=${eventId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teams/${teamId}?eventid=${eventId}`,
         reqBody
       );
       if (!data) {

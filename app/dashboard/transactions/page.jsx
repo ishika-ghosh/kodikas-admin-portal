@@ -15,9 +15,11 @@ function Transactions() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch(`/api/transactions`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions`
+        );
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setTransactions(data.transactions);
       } catch (error) {
         console.log(error);
@@ -27,14 +29,16 @@ function Transactions() {
     getData();
   }, []);
   const handleSubmit = async () => {
-    console.log(times);
+    // console.log(times);
     if (times.startTime > times.endTime) {
       alert("start should be less than end time");
       return;
     }
     try {
       const { data } = await axios.get(
-        `/api/transactions?start-time=${new Date(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/transactions?start-time=${new Date(
           times.startTime
         )}&end-time=${new Date(times.endTime)}`
       );

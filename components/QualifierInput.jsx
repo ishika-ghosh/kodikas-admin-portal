@@ -5,7 +5,7 @@ function QualifierInput({
   handleChange,
   cardTitle,
 }) {
-  console.log(cardTitle);
+  // console.log(cardTitle);
   return !qualified ? (
     <div className="flex items-center pl-3">
       <input

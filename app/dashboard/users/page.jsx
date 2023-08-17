@@ -22,9 +22,9 @@ function Users() {
         if (!yearSort && !deptSort) sort = "";
         if (yearSort) sort = yearSort > 0 ? "year" : "-year";
         if (deptSort) sort = deptSort > 0 ? "department" : "-department";
-        console.log(sort);
+        // console.log(sort);
         const { data: data } = await axios.get(
-          `/api/users?search=${search}&sort=${sort}&page=${pageNum}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users?search=${search}&sort=${sort}&page=${pageNum}`
         );
         setUsers(data.data);
         setCount(data.count);
@@ -40,13 +40,15 @@ function Users() {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data: data } = await axios.get("/api/users");
-        console.log(data);
+        const { data: data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`
+        );
+        // console.log(data);
         setLoading(false);
         setLimit(data.limit);
         setCount(data.count);
         setUsers(data.data);
-        console.log({ limit }, { count });
+        // console.log({ limit }, { count });
       } catch (error) {
         console.log(error);
       }

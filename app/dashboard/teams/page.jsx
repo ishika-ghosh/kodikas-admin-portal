@@ -18,9 +18,9 @@ function Teams() {
     const handler = async () => {
       try {
         const { data } = await axios.get(
-          `/api/teams?search=${search}&filter=${filter}&page=${pageNum}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/teams?search=${search}&filter=${filter}&page=${pageNum}`
         );
-        console.log("am all time useEffect" + data.teams);
+        // console.log("am all time useEffect" + data.teams);
         setTeams(data.teams);
         setCount(data.count);
       } catch (error) {
@@ -35,12 +35,14 @@ function Teams() {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`/api/teams`);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/teams`
+        );
         setLoading(false);
         setTeams(data.teams);
         setLimit(data.limit);
         setCount(data.count);
-        console.log("am first time useEffect" + data.teams);
+        // console.log("am first time useEffect" + data.teams);
       } catch (error) {
         console.log(error);
       }

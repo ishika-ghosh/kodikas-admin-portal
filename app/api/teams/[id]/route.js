@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import EventTimings from "@models/eventTimings";
 import Admin from "@models/admin";
-import { sendEmail } from "@controllers/sendEmail";
+import sendConfirmationEmail from "@utils/sendEmail";
 
 export async function GET(req, { params }) {
   try {
@@ -87,17 +87,13 @@ export async function PUT(req, { params }) {
       path: "team",
       populate: [{ path: "teamMember" }, { path: "leader" }],
     });
-    let round =
-      (body?.first && "First") ||
-      (body?.second && "Second") ||
-      (body?.third && "Final Round");
-
-    const messageData = {
-      team: newEvent.team.teamName,
-      round: round,
-    };
-    const { success } = sendEmail(newEvent?.team?.leader?.email, messageData);
-    return NextResponse.json({ updatedEvent: newEvent, success: success });
+    sendConfirmationEmail(
+      newEvent?.team?.leader,
+      newEvent?.team,
+      newEvent?.team?.leader?.email,
+      { event: 3 }
+    );
+    return NextResponse.json({ updatedEvent: newEvent, success: true });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

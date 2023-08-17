@@ -32,8 +32,8 @@ export async function GET(request) {
     : {};
   const limit = 2;
   const skip = (page - 1) * limit;
-  console.log({ queries });
-  console.log({ sort });
+  // console.log({ queries });
+  // console.log({ sort });
   try {
     await connectToDatabase();
     const count = await User.find(queries).count();

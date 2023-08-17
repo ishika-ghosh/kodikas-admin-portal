@@ -15,11 +15,14 @@ function page() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async () => {
-    console.log(formData);
+    // console.log(formData);
     try {
       setLoading(true);
-      const { data } = await axios.post("/api/users/login", formData);
-      console.log(data);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/login`,
+        formData
+      );
+      // console.log(data);
       setLoading(false);
       router.push("/dashboard");
     } catch (error) {}
@@ -89,7 +92,13 @@ function page() {
     //     </div>
     //   </div>
     // </section>
-    <UserForm formData={formData} loading={loading} handleChange={handleChange} handleSubmit={handleSubmit} createUser={false}/>
+    <UserForm
+      formData={formData}
+      loading={loading}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      createUser={false}
+    />
   );
 }
 

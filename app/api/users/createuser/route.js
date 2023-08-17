@@ -22,7 +22,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    console.log(reqBody);
+    // console.log(reqBody);
     const existingUser = await Admin.findOne({ username });
     if (existingUser) {
       return NextResponse.json(

@@ -23,8 +23,10 @@ function SideBar() {
 
   const handleSignout = async () => {
     try {
-      const { data } = await axios.get("/api/users/signout");
-      console.log(data);
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/signout`
+      );
+      // console.log(data);
       router.push("/login");
     } catch (error) {
       console.log(error);

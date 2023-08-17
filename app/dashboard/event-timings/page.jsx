@@ -18,8 +18,10 @@ function Timings() {
   const getTimes = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/event-times");
-      console.log(data);
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times`
+      );
+      // console.log(data);
       setTimes(data);
       setLoading(false);
     } catch (error) {
@@ -34,13 +36,19 @@ function Timings() {
     try {
       let res;
       if (option) {
-        res = await axios.post("/api/event-times/activate", {
-          eventId: id,
-        });
+        res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times/activate`,
+          {
+            eventId: id,
+          }
+        );
       } else {
-        res = await axios.post("/api/event-times/disable", {
-          eventId: id,
-        });
+        res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times/disable`,
+          {
+            eventId: id,
+          }
+        );
       }
       if (res.data.success) {
         getTimes();
@@ -54,7 +62,7 @@ function Timings() {
   const openModal = (id) => {
     setCurrentId(id);
     const timeData = times.find((time) => time._id === id);
-    console.log(timeData);
+    // console.log(timeData);
     setModalData({
       name: timeData.name,
       startTime: timeData.startTime,
@@ -74,10 +82,10 @@ function Timings() {
   const handleUpdate = async () => {
     try {
       const { data } = await axios.post(
-        `/api/event-times/${currentId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times/${currentId}`,
         modalData
       );
-      console.log(data);
+      // console.log(data);
       closeModal();
       getTimes();
     } catch (error) {

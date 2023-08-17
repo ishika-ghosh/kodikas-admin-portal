@@ -30,18 +30,22 @@ function Scanner() {
       scanner.clear();
       setTeamId(qrCodeMessage);
       // to get team details and setPaymentStatus
-      const response = await fetch(`/api/payment?teamid=${qrCodeMessage}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment?teamid=${qrCodeMessage}`
+      );
       const data = await response.json();
       setTeamData(data?.team);
-      console.log(data.team);
+      // console.log(data.team);
       setPaymentStatus(data?.team?.payment);
       // to get and set timing details
-      const timingsResponse = await fetch(`/api/event-times`);
+      const timingsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times`
+      );
       const timingsResponseData = await timingsResponse.json();
       setTimings(timingsResponseData);
       // to get eventDay details(can be null) and set EntryStatus and LunchStatus
       const eventDataResponse = await fetch(
-        `/api/events/team-detail?teamid=${qrCodeMessage}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/team-detail?teamid=${qrCodeMessage}`
       );
       const eventDataResponseData = await eventDataResponse?.json();
       setEventData(eventDataResponseData);
@@ -69,22 +73,28 @@ function Scanner() {
   const submitHandler = async () => {
     if (!eventData?.attendance) {
       if (!entryStatus) return alert("Please Verify Entry");
-      await fetch("/api/events/team-detail/change-details", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ teamId, entryStatus }),
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/team-detail/change-details`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ teamId, entryStatus }),
+        }
+      );
     } else {
       if (!lunchStatus) return alert("Please Verify Lunch");
-      await fetch("/api/events/team-detail/change-details", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ teamId, lunchStatus }),
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/team-detail/change-details`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ teamId, lunchStatus }),
+        }
+      );
     }
     router.push("/dashboard/scan");
     // window.location.href = "http://localhost:3000/dashboard/scan";

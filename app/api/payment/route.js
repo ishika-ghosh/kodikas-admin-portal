@@ -6,12 +6,13 @@ import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import { getDetails } from "@utils/getDetails";
 import EventDay from "@models/eventDay";
+import sendConfirmationEmail from "@utils/sendEmail";
 export async function GET(req) {
   try {
     await connectToDatabase();
     const { searchParams } = new URL(req.url);
     const teamId = searchParams.get("teamid");
-    console.log(teamId);
+    // console.log(teamId);
     let team = await Team.findOne({
       _id: searchParams.get("teamid"),
     }).populate(["leader", "teamMember"]);
@@ -37,26 +38,35 @@ export async function PUT(req) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
     const teamData = await Team.findById(teamId);
-    if (teamData.teamMemberConfirmation && !teamData.payment) {
-      const updatedData = await Team.updateOne(
-        { team: teamId },
+    if (teamData && teamData.teamMemberConfirmation && !teamData.payment) {
+      const updatedData = await Team.findByIdAndUpdate(
+        teamData?._id,
         {
           payment: paymentStatus,
-        }
-      );
-      console.log(updatedData);
+        },
+        { new: true }
+      )
+        .populate("leader")
+        .populate("teamMember");
+      // console.log(updatedData);
       if (!updatedData) {
         return NextResponse.json(
           { message: "Internal Server Error" },
           { status: 500 }
         );
       }
-      console.log(updatedData);
+      // console.log(updatedData);
       const addInPayment = await Payment.create({
         team: teamId,
         admin: admin?.id,
       });
-      console.log("updatedData: " + updatedData);
+      // console.log("updatedData: ", updatedData);
+      sendConfirmationEmail(
+        updatedData?.leader,
+        updatedData,
+        updatedData?.leader?.email,
+        { event: 0 }
+      );
       return NextResponse.json({
         success: true,
         updatedData,
@@ -66,7 +76,6 @@ export async function PUT(req) {
     } else {
       return NextResponse.json({ success: false, message: "Team not full" });
     }
-    return NextResponse.json({ message: "Team not full!" }, { status: 500 });
   } catch (error) {
     console.error("Error updating payment details:", error);
     return NextResponse.json(

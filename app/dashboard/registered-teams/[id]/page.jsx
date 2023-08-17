@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 function TeamDetails({ params }) {
   const router = useRouter();
   const [details, setDetails] = useState(null);
-  const [attended, setAttended] = useState(false);
   const [loading, setLoading] = useState(false);
   const [timings, setTimigs] = useState([]);
   const [eventId, setEventId] = useState("");
@@ -22,15 +21,17 @@ function TeamDetails({ params }) {
     const { id } = params;
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/teams/all/${id}`);
-      const { data: attendence } = await axios.get(`/api/teams/${id}`);
-      const { data: timeData } = await axios.get("/api/event-times");
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teams/all/${id}`
+      );
+      const { data: timeData } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-times`
+      );
       setLoading(false);
       if (!data) {
         router.push("/404");
       }
       setDetails(data);
-      setAttended(attendence ? true : false);
       setCheckbox([data?.payment, false]);
       setTimigs(timeData);
     } catch (error) {
@@ -50,8 +51,11 @@ function TeamDetails({ params }) {
   };
   const handleSubmit = async () => {
     try {
-      const { data } = await axios.put(`/api/payment`, reqBody);
-      console.log(data);
+      const { data } = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment`,
+        reqBody
+      );
+      // console.log(data);
       if (!data) {
         router.push("/404");
       }
@@ -197,30 +201,6 @@ function TeamDetails({ params }) {
                 cardTitle="Payment"
               />
             </li>
-            {details?.payment && (
-              <li className="w-full dark:border-gray-600">
-                <QualifierInput
-                  qualified={attended}
-                  isDisabled={!checkTime(timings, "Attendence")}
-                  isChecked={checkbox[1]}
-                  handleChange={() => {
-                    setCheckbox(
-                      checkbox.map((item, i) => (i === 1 ? !item : item))
-                    );
-                    setLoading(true);
-                    const { data: eventAttendence } = axios.post(
-                      "/api/events/team-detail/change-details",
-                      { teamId: details?._id, entryStatus: true }
-                    );
-                    if (eventAttendence?.success) {
-                      setAttended(eventStarted);
-                    }
-                    setLoading(false);
-                  }}
-                  cardTitle={"Attendence"}
-                />
-              </li>
-            )}
           </ul>
         </div>
       </section>

@@ -36,10 +36,13 @@ function CreateUser() {
   const handleSubmit = async () => {
     try {
       setUserData({ ...userData, isSuperAdmin: checked });
-      console.log(userData);
+      // console.log(userData);
       setLoading(true);
-      const { data } = await axios.post("/api/users/createuser", userData);
-      console.log(data);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/createuser`,
+        userData
+      );
+      // console.log(data);
       alert("user created successfully");
       setLoading(false);
     } catch (error) {
