@@ -5,6 +5,7 @@ import { getDetails } from "@utils/getDetails";
 import Admin from "@models/admin";
 
 export async function GET(request) {
+  await connectToDatabase();
   const { searchParams } = new URL(request.url);
   const admin = getDetails(request);
   if (!admin) {
@@ -35,7 +36,6 @@ export async function GET(request) {
   // console.log({ queries });
   // console.log({ sort });
   try {
-    await connectToDatabase();
     const count = await User.find(queries).count();
     const users = await User.find(queries).sort(sort).skip(skip).limit(limit);
     return NextResponse.json({
