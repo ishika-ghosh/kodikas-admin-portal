@@ -103,10 +103,10 @@ function TeamDetails({ params }) {
           </u>
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-3 xl:gap-x-12">
+        <div className="grid gap-6 md:grid-cols-2 xl:gap-x-12">
           <div className="mb-6 lg:mb-0">
             <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-              <div className="flex-row items-center lg:flex">
+              <div className="flex-row w-full items-center lg:flex">
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                   <img
                     src={details?.leader.image}
