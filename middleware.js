@@ -20,11 +20,11 @@ export async function middleware(req) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       }
     } else {
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   } catch (error) {
     console.log(error);
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
