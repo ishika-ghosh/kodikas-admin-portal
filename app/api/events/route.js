@@ -8,6 +8,7 @@ import { connectToDatabase } from "@utils/db";
 import EventDay from "@models/eventDay";
 import { getToken } from "next-auth/jwt";
 
+export const dynamic = "force-dynamic";
 export async function GET(req) {
   try {
     await connectToDatabase();

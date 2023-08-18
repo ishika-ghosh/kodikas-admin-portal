@@ -5,8 +5,6 @@ import Link from "next/link";
 import Loader from "@components/Loader";
 import { useRouter } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
 function Users() {
   const router = useRouter();
   const [users, setUsers] = useState([]);

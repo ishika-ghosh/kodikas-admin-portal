@@ -7,6 +7,8 @@ import EventDay from "@models/eventDay";
 import Admin from "@models/admin";
 import { getToken } from "next-auth/jwt";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req) {
   try {
     await connectToDatabase();
