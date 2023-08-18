@@ -5,6 +5,7 @@ import Loader from "@components/Loader";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+export const dynamic = "force-dynamic";
 function Teams() {
   const router = useRouter();
   const [teams, setTeams] = useState([]);

@@ -19,14 +19,6 @@ export async function middleware(req) {
       if (!isPublic && !token?.isSuperUser) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       }
-      const reqHeader = new Headers(req.headers);
-      reqHeader.set("Authorization", token?.username);
-      const response = NextResponse.next({
-        request: {
-          headers: reqHeader,
-        },
-      });
-      return response;
     } else {
       return NextResponse.redirect(new URL("/login", request.url));
     }

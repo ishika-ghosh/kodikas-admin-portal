@@ -5,6 +5,8 @@ import QualifierInput from "@components/QualifierInput";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+
+export const dynamic = "force-dynamic";
 function TeamDetails({ params }) {
   const router = useRouter();
   const [details, setDetails] = useState(null);

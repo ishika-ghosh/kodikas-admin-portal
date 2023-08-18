@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios"
+import axios from "axios";
+
+export const dynamic = "force-dynamic";
 
 function Navbar() {
   const [adminDetails, setAdminDetails] = useState(null);

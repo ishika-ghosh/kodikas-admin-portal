@@ -2,6 +2,8 @@
 import Loader from "@components/Loader";
 import axios from "axios";
 import { useState, useEffect } from "react";
+
+export const dynamic = "force-dynamic";
 function page() {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);

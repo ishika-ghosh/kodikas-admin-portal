@@ -4,6 +4,8 @@ import { Modal } from "@components/Modal";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 function Transactions() {
   const router = useRouter();
   const [transactions, setTransactions] = useState([]);

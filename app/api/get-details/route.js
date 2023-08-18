@@ -12,7 +12,9 @@ export async function GET(req) {
     await connectToDatabase();
     const token = await getToken({ req });
     // console.log(token.username);
-    const admin = await Admin.findOne({ username: token?.username }).select("-password");
+    const admin = await Admin.findOne({ username: token?.username }).select(
+      "-password"
+    );
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
