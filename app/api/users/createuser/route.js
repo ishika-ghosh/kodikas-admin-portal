@@ -2,23 +2,22 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import Admin from "@models/admin";
 import bcryptjs from "bcryptjs";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 
 export async function POST(req) {
   try {
     await connectToDatabase();
     const reqBody = await req.json();
     const { username, password, isSuperAdmin } = reqBody;
-    const decoded = getDetails(req);
-    if (!decoded) {
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
+    if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const admin = await Admin.findById(decoded?.id);
     if (!admin.isSuperAdmin) {
       return NextResponse.json(
-        {
-          error: "Non super admin can not create a user",
-        },
+        { message: "Only super admins are allowed" },
         { status: 400 }
       );
     }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import EventTimings from "@models/eventTimings";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import mongoose from "mongoose";
 import Admin from "@models/admin";
 
@@ -18,21 +18,15 @@ export async function POST(req, { params }) {
         { status: 404 }
       );
     }
-    const admin = getDetails(req);
-    const adminData = await Admin.findById(admin?.id);
-    if (!adminData) {
-      return NextResponse.json(
-        {
-          message: "admin not found",
-        },
-        { status: 404 }
-      );
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
+    if (!admin) {
+      return NextResponse.json({ error: "Not valid user", success: false });
     }
-    if (!adminData.isSuperAdmin) {
+    if (!admin.isSuperAdmin) {
       return NextResponse.json(
-        {
-          message: "Only super admins are allowed to update status of a link",
-        },
+        { message: "Only super admins are allowed" },
         { status: 400 }
       );
     }

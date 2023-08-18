@@ -6,20 +6,20 @@ import mongoose from "mongoose";
 import EventTimings from "@models/eventTimings";
 import Admin from "@models/admin";
 import sendConfirmationEmail from "@utils/sendEmail";
+import { getToken } from "next-auth/jwt";
 
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const adminId = admin?.id;
-    const adminDetails = await Admin.findById(adminId);
-    //if not a super admin then can not allow then to change the details
-    if (!adminDetails.isSuperAdmin) {
+    if (!admin.isSuperAdmin) {
       return NextResponse.json(
-        { message: "Only super admin can change this details" },
+        { message: "Only super admins are allowed" },
         { status: 400 }
       );
     }
@@ -46,16 +46,15 @@ export async function PUT(req, { params }) {
   try {
     await connectToDatabase();
     //check weather the current admin is a super admin or not
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const adminId = admin?.id;
-    const adminDetails = await Admin.findById(adminId);
-    //if not a super admin then can not allow then to change the details
-    if (!adminDetails.isSuperAdmin) {
+    if (!admin.isSuperAdmin) {
       return NextResponse.json(
-        { message: "Only super admin can change this details" },
+        { message: "Only super admins are allowed" },
         { status: 400 }
       );
     }

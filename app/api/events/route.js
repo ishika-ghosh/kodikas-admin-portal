@@ -6,10 +6,23 @@ import Payment from "@models/payment";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import EventDay from "@models/eventDay";
+import { getToken } from "next-auth/jwt";
 
-export async function GET() {
+export async function GET(req) {
   try {
     await connectToDatabase();
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
+    if (!admin) {
+      return NextResponse.json({ error: "Not valid user", success: false });
+    }
+    if (!admin.isSuperAdmin) {
+      return NextResponse.json(
+        { message: "Only super admins are allowed" },
+        { status: 400 }
+      );
+    }
     const eventsOfAllTeams = await EventDay.find().populate({
       path: "team",
       populate: [{ path: "teamMember" }, { path: "leader" }],

@@ -2,25 +2,19 @@ import Payment from "@models/payment";
 import Admin from "@models/admin";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 export async function GET(req) {
   try {
     await connectToDatabase();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
-      return NextResponse.json(
-        { message: "Not a valid user" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const id = admin?.id;
-    const adminData = await Admin.findById(id);
-    if (!adminData.isSuperAdmin) {
+    if (!admin.isSuperAdmin) {
       return NextResponse.json(
-        {
-          message:
-            "Only super admins are allowes to activate or disable a link",
-        },
+        { message: "Only super admins are allowed" },
         { status: 400 }
       );
     }

@@ -6,7 +6,7 @@ import Payment from "@models/payment";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import EventDay from "@models/eventDay";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -22,16 +22,15 @@ export async function GET(request) {
   const skip = (page - 1) * limit;
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req:request });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const adminId = admin?.id;
-    const adminDetails = await Admin.findById(adminId);
-    //if not a super admin then can not allow then to change the details
-    if (!adminDetails.isSuperAdmin) {
+    if (!admin.isSuperAdmin) {
       return NextResponse.json(
-        { message: "Only super admin can change this details" },
+        { message: "Only super admins are allowed" },
         { status: 400 }
       );
     }
