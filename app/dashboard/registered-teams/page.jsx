@@ -14,6 +14,7 @@ function RegisteredTeams() {
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(0);
   const [count, setCount] = useState(0);
+  const handleAttendence = async (id) => {};
   //   useEffect(() => {
   //     const handler = async () => {
   //       try {
@@ -154,6 +155,12 @@ function RegisteredTeams() {
                     >
                       Team Member
                     </th>
+                    <th
+                      scope="col"
+                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
@@ -216,6 +223,16 @@ function RegisteredTeams() {
                           )}
                         </div>
                       </td>
+                      <td className="p-4 space-x-2 whitespace-nowrap">
+                        <button
+                          type="button"
+                          onClick={() => handleAttendence(team?._id)}
+                          data-modal-toggle="delete-user-modal"
+                          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-red-300 "
+                        >
+                          Attendence
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -223,7 +240,7 @@ function RegisteredTeams() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center fixed mb-10 left-1/2 bottom-0">
+        <div className="flex flex-col items-center justify-center mb-10 left-1/2 bottom-0">
           <span className="text-sm text-gray-700 dark:text-gray-400">
             Showing{" "}
             <span className="font-semibold text-gray-900 dark:text-white">
