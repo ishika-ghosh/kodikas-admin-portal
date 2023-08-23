@@ -25,7 +25,7 @@ const sendConfirmationEmail = async (teamLeader, team, email, event) => {
   const mailOptions = {
     from: process.env.EMAIL,
     to: email,
-    subject: subject.replace("<round>",event?.round),
+    subject: subject.replace("<round>", event?.round),
     text: text
       .replace("<leaderName>", teamLeader?.name)
       .replace("<teamName>", team?.teamName)
