@@ -1,5 +1,5 @@
 import EventDay from "@models/eventDay";
-import { getDetails } from "@utils/getDetails";
+// import { getDetails } from "@utils/getDetails";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";

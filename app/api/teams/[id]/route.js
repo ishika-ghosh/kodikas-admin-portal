@@ -1,5 +1,5 @@
 import EventDay from "@models/eventDay";
-import { getDetails } from "@utils/getDetails";
+// import { getDetails } from "@utils/getDetails";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
@@ -8,6 +8,7 @@ import Admin from "@models/admin";
 import sendConfirmationEmail from "@utils/sendEmail";
 import { getToken } from "next-auth/jwt";
 
+export const dynamic = "force-dynamic";
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
@@ -86,12 +87,14 @@ export async function PUT(req, { params }) {
       path: "team",
       populate: [{ path: "teamMember" }, { path: "leader" }],
     });
-    sendConfirmationEmail(
-      newEvent?.team?.leader,
-      newEvent?.team,
-      newEvent?.team?.leader?.email,
-      { event: 3 }
-    );
+    if (body.first || body.second || body.third) {
+      await sendConfirmationEmail(
+        newEvent?.team?.leader,
+        newEvent?.team,
+        newEvent?.team?.leader?.email,
+        { event: 1, round: body.first ? 1 : body.second ? 2 : 3 }
+      );
+    }
     return NextResponse.json({ updatedEvent: newEvent, success: true });
   } catch (error) {
     console.log(error);

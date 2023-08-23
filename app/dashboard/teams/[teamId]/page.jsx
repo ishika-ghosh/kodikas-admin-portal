@@ -116,7 +116,7 @@ function TeamDetails({ params }) {
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                   <img
                     src={details?.team.leader.image}
-                    alt="Trendy Pants and Shoes"
+                    alt="Leader photo"
                     className="mb-6 w-full rounded-md lg:mb-0"
                   />
                 </div>
@@ -134,6 +134,10 @@ function TeamDetails({ params }) {
                     {details?.team.leader.department}{" "}
                     {details?.team.leader.year}
                   </p>
+                  <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                    {details?.team?.leader?.phoneNumber}
+                  </p>
+
                   <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
                 </div>
               </div>
@@ -145,7 +149,7 @@ function TeamDetails({ params }) {
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                   <img
                     src={details?.team.teamMember.image}
-                    alt="Trendy Pants and Shoes"
+                    alt="Team members photo"
                     className="mb-6 w-full rounded-md lg:mb-0"
                   />
                 </div>
@@ -159,6 +163,9 @@ function TeamDetails({ params }) {
                   <p className="mb-4 text-neutral-500 dark:text-neutral-300">
                     {details?.team.teamMember.department}{" "}
                     {details?.team.teamMember.year}
+                  </p>
+                  <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                    {details?.team?.teamMember?.phoneNumber}
                   </p>
                   <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
                 </div>

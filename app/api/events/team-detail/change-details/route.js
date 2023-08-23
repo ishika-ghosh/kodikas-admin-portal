@@ -8,6 +8,8 @@ import { getToken } from "next-auth/jwt";
 import EventDay from "@models/eventDay";
 import sendConfirmationEmail from "@utils/sendEmail";
 
+export const dynamic = "force-dynamic";
+
 export async function PUT(req) {
   try {
     await connectToDatabase();
@@ -36,12 +38,6 @@ export async function PUT(req) {
       populate: [{ path: "teamMember" }, { path: "leader" }],
     });
     // console.log("updatedData: " + updatedData);
-    sendConfirmationEmail(
-      updatedData?.team?.leader,
-      updatedData?.team,
-      updatedData?.team?.leader?.email,
-      { event: 2 }
-    );
     return NextResponse.json({
       success: true,
       updatedData,

@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import { getToken } from "next-auth/jwt";
 import EventDay from "@models/eventDay";
+export const dynamic = "force-dynamic";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);

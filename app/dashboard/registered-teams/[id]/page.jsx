@@ -110,7 +110,7 @@ function TeamDetails({ params }) {
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                   <img
                     src={details?.leader.image}
-                    alt="Trendy Pants and Shoes"
+                    alt="leader's photo"
                     className="mb-6 w-full rounded-md lg:mb-0"
                   />
                 </div>
@@ -142,7 +142,7 @@ function TeamDetails({ params }) {
                   <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                     <img
                       src={details?.teamMember?.image}
-                      alt="Trendy Pants and Shoes"
+                      alt="Team Member's photo"
                       className="mb-6 w-full rounded-md lg:mb-0"
                     />
                   </div>
