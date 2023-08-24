@@ -162,33 +162,33 @@ function Transactions() {
                   {transactions?.map((transaction) => (
                     <tr
                       className="hover:bg-gray-100 dark:hover:bg-gray-700"
-                      key={transaction._id}
+                      key={transaction?._id}
                     >
                       <td className="max-w-sm p-4 overflow-hidden text-base font-normal text-gray-500 truncate xl:max-w-xs dark:text-gray-400">
                         <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                           <div className="text-base font-semibold text-gray-900 dark:text-white">
-                            {transaction.admin.username.split("@")[0]}
+                            {transaction?.admin.username.split("@")[0]}
                           </div>
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          {transaction.admin.isSuperAdmin ? "SA" : "A"}
+                          {transaction?.admin.isSuperAdmin ? "SA" : "A"}
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          {transaction.team.teamName}
+                          {transaction?.team.teamName}
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          {transaction.team.leader.email}
+                          {transaction?.team.leader.email}
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          {transaction.createdAt.split("T")[0]}
+                          {transaction?.createdAt.split("T")[0]}
                         </div>
                       </td>
 
