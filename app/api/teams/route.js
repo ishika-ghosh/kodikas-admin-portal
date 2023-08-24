@@ -18,11 +18,11 @@ export async function GET(request) {
         $or: [{ teamName: { $regex: search, $options: "i" } }],
       }
     : {};
-  const limit = 2;
+  const limit = 20;
   const skip = (page - 1) * limit;
   try {
     await connectToDatabase();
-    const token = await getToken({ req:request });
+    const token = await getToken({ req: request });
     // console.log(token.username);
     const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
